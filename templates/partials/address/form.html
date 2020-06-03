@@ -1,0 +1,23 @@
+<form action="
+{% if action_url %}
+    {{action_url}}
+{% else %}
+    {% url 'accounts:login' %}
+{% endif %}" method="POST">
+
+    {% csrf_token %}
+    {% if next_url %}
+        <input type="hidden" name="next" value="{{ next_url }}">
+    {% endif %}
+        {% for form in forms %}
+            <div class="form-group">
+                {{ form }}
+            </div>
+        {% endfor %}
+        {% if address_type %}
+            <input type="hidden" name="address_type" value="{{ address_type }}">
+        {% endif %}
+    <div class="form-group">
+        <button type="submit" class="form-control btn btn-outline-primary">Submit</button>
+    </div> 
+</form>

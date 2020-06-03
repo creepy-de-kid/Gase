@@ -1,0 +1,66 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Css -->
+    {% include "partials/css.html" %}
+    {% block css %}{% endblock  %}
+
+    <title>Gase {% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <!-- Navabr -->
+    {% include "partials/_navbar.html" with brand_name="<span style='color:red;'>G</span><span style='color:limegreen'>a</span><span style='color:royalblue'>s</span>e&#769;" %}
+
+    <!-- Main content -->
+   <div class="container">
+      {% block content %}
+      {% endblock %}
+   </div>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+   {% include "partials/js.html" %}
+
+    <script>
+      $(document).ready(function() {
+        var productForm = $(".form-product-ajax");
+        productForm.submit(function(e) {
+          e.preventDefault();
+
+          thisForm = $(this);
+          var urlEndpoint = thisForm.attr("action");
+          var httpMethod = thisForm.attr("method");
+          var formData = thisForm.serialize();
+
+          var navUpdateCart = $(".cart-count");
+
+          $.ajax({
+            url: urlEndpoint,
+            method: httpMethod,
+            data: formData,
+            success: (data) => {
+              var updatebutton = thisForm.find(".ajax-button-change");
+              if (data.added) {
+                updatebutton.html("<button type='submit' class='btn btn-primary'>Remove</button>");
+              } else {
+                updatebutton.html("<button type='submit' class='btn btn-success'>Add</button>");
+              }
+              navUpdateCart.text(data.cartCount)
+            },
+            error: (error) => console.log('Error: ', error)
+          });
+
+          console.log(urlEndpoint, ' ', httpMethod)
+
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<!-- Next: Refresh Cart Ajax -->

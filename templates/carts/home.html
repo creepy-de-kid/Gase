@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+	{% if cart.product.exists %}
+		<table class="table cart-table">
+			<thead>
+				<tr>
+					<th><strong>#</strong></th>
+					<th><strong>Product Name</strong></th>
+					<th><strong>product price</strong></th>
+				</tr>
+			</thead>
+			<tbody class="cart-body">
+				{% for item in cart.product.all %}
+					<tr class="cart-product">
+						<th scope='row'>{{ forloop.counter }}</th>
+						<td><a href="{{ item.get_absolute_uri }}">{{ item.title }}</a>
+							{% include 'partials/update-cart.html' with product=item cart=cart in_cart=True%}
+						</td>
+						<td>{{ item.price | intcomma }}</td>
+					</tr>
+				{% endfor %}
+				<tr>
+					<td colspan="2"></td>
+					<td><b>Subtotal: </b>&#8358;<span class="cart-subtotal">{{ cart.subtotal | intcomma }}</span></td>
+				</tr>
+				<tr>
+					<td colspan="2"></td>
+					<td><b>Total: </b>&#8358;<span class="cart-total">{{ cart.total | intcomma }}</span></td>
+				</tr>
+				<tr>
+					<td colspan="2"></td>
+					<td><a class="btn btn-md btn-block btn-outline-primary" href="{% url 'cart:checkout' %}">Checkout</a></td>
+				</tr>
+			</tbody>
+		</table>
+	{% else %}
+	<p class="lead">Cart is empty</p>
+	{% endif %}
+{% endblock %}
