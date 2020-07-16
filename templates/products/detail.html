@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="row">
+    	<div class="col-12 col-md-6">
+	    	{% if detail %}
+	    		<p>{{ detail.timestamp | timesince }} ago</p>
+	    		<p>{{ detail.description }}</p>
+		    {% if detail.image %}
+		        <img src="{{ detail.image.url }}" class="img-fluid" style="width:500px; height:500px; object-fit: contain">
+		    {% endif %}
+		    {% else %}
+		        <p>Nothing to show</p>
+		    {% endif %}
+    	</div>
+
+    	<div class="col-12 col-md-6">
+    		{% include 'partials/update-cart.html' with product=detail cart=cart %}
+    	</div>
+	</div>
+{% endblock  %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} | Contact{% endblock  %}
+
+{% block content %}
+  <div class="text-center">
+    <h1>{{ title }}</h1>
+  </div>
+  
+  <div class="row">
+    <div class="col">
+      <p>{{ content }}</p>
+      <div class="col-sm-6 col-12">
+        <form action="{% url 'contact' %}" method="POST">
+          {% csrf_token %}
+          {% for form in forms  %}
+            <div class="form-group">
+              {{ form }}
+            </div>
+          {% endfor %}
+          <div class="form-group">
+            <button type="submit" class="form-control btn btn-outline-primary">Submit</button>
+          </div> 
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock  %}

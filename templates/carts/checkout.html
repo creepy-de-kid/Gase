@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+{{ object.order_id }} -- {{ object.cart }}
+    <!-- User without billing profile -->
+    {% if not billing_profile %}
+        <div class="row text-center">
+            <div class="col-12 col-sm-6">
+                <h2 class="lead">Login if registered</h2>
+                {% include 'partials/form.html' with forms=login_form next_url=request.build_absolute_uri %}
+            </div>
+            <div class="col-12 col-sm-6">
+                <h2 class="lead">Checkout as guest</h2>
+                {% url 'accounts:guest_register' as guest_register_url %}
+                {% include 'partials/form.html' with forms=guest_form next_url=request.build_absolute_uri action_url=guest_register_url %}
+            </div>
+        </div>
+    {% else %}
+        {% if not objects.shipping_address %}
+            <div class="row">
+                <div class="col-md-6 mx-auto col-10">
+                    <p>Shipping Address</p>
+                    <hr>
+                    {% url 'cart:checkout_create' as checkout_create %}
+                    {% include 'partials/address/form.html' with forms=address_form next_url=request.build_absolute_uri action_url=checkout_create address_type='shipping'%}
+                </div>
+            </div>
+        {% elif not objects.billing_address %}
+            <div class="row">
+                <div class="col-md-6 mx-auto col-10">
+                    <p>Billing Address</p>
+                    <hr>
+                    {% url 'cart:checkout_create' as checkout_create %}
+                    {% include 'partials/address/form.html' with forms=address_form next_url=request.build_absolute_uri action_url=checkout_create address_type='billing'%}
+                </div>
+            </div>
+        {% else %}
+            <h1>Finalize Checkout</h1>
+
+            <p>Cart Total: &#8358;{{ object.cart.total | intcomma }}</p>
+            <p>Shipping Total: &#8358;{{ object.shipping_total | intcomma }}</p>
+            <p>Order Total: &#8358;{{ object.total | intcomma }}</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}
